@@ -279,8 +279,8 @@ def enforce_task_timeouts() -> None:
             if owner_chat_id:
                 send_with_budget(
                     owner_chat_id,
-                    f"⏱️ Задача {task_id} работает {int(runtime_sec)}с. "
-                    f"type={task_type}, heartbeat_lag={int(hb_lag_sec)}с. Продолжаю.",
+                    f"⏱️ Task {task_id} running for {int(runtime_sec)}s. "
+                    f"type={task_type}, heartbeat_lag={int(hb_lag_sec)}s. Continuing.",
                 )
 
         if runtime_sec < HARD_TIMEOUT_SEC:
@@ -330,13 +330,13 @@ def enforce_task_timeouts() -> None:
         if owner_chat_id:
             if requeued:
                 send_with_budget(owner_chat_id, (
-                    f"🛑 Hard-timeout: задача {task_id} убита после {int(runtime_sec)}с.\n"
-                    f"Worker {worker_id} перезапущен. Задача поставлена на retry attempt={new_attempt}."
+                    f"🛑 Hard-timeout: task {task_id} killed after {int(runtime_sec)}s.\n"
+                    f"Worker {worker_id} restarted. Task queued for retry attempt={new_attempt}."
                 ))
             else:
                 send_with_budget(owner_chat_id, (
-                    f"🛑 Hard-timeout: задача {task_id} убита после {int(runtime_sec)}с.\n"
-                    f"Worker {worker_id} перезапущен. Лимит retry исчерпан, задача остановлена."
+                    f"🛑 Hard-timeout: task {task_id} killed after {int(runtime_sec)}s.\n"
+                    f"Worker {worker_id} restarted. Retry limit exhausted, task stopped."
                 ))
 
         persist_queue_snapshot(reason="task_hard_timeout")
@@ -371,7 +371,7 @@ def queue_review_task(reason: str, force: bool = False) -> Optional[str]:
         "text": build_review_task_text(reason=reason),
     })
     persist_queue_snapshot(reason="review_enqueued")
-    send_with_budget(int(owner_chat_id), f"🔎 Review в очереди: {tid} ({reason})")
+    send_with_budget(int(owner_chat_id), f"🔎 Review queued: {tid} ({reason})")
     return tid
 
 
@@ -406,7 +406,7 @@ def enqueue_evolution_task_if_needed() -> None:
     if remaining < EVOLUTION_BUDGET_RESERVE:
         st["evolution_mode_enabled"] = False
         save_state(st)
-        send_with_budget(int(owner_chat_id), f"💸 Эволюция остановлена: осталось ${remaining:.2f} (резерв ${EVOLUTION_BUDGET_RESERVE:.0f} для разговоров).")
+        send_with_budget(int(owner_chat_id), f"💸 Evolution stopped: ${remaining:.2f} remaining (reserve ${EVOLUTION_BUDGET_RESERVE:.0f} for conversations).")
         return
     cycle = int(st.get("evolution_cycle") or 0) + 1
     tid = uuid.uuid4().hex[:8]

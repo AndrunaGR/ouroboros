@@ -433,11 +433,11 @@ class OuroborosAgent:
                     "task_id": task.get("id"), "error": repr(e),
                     "traceback": truncate_for_log(tb, 2000),
                 })
-                text = f"⚠️ Ошибка при обработке: {type(e).__name__}: {e}"
+                text = f"⚠️ Error during processing: {type(e).__name__}: {e}"
 
             # Empty response guard
             if not isinstance(text, str) or not text.strip():
-                text = "⚠️ Модель вернула пустой ответ. Попробуй переформулировать запрос."
+                text = "⚠️ Model returned an empty response. Try rephrasing your request."
 
             # Emit events for supervisor
             self._emit_task_results(task, text, usage, llm_trace, start_time, drive_logs)

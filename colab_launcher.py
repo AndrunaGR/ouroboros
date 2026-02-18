@@ -255,7 +255,7 @@ if restored_pending > 0:
     st_boot = load_state()
     if st_boot.get("owner_chat_id"):
         send_with_budget(int(st_boot["owner_chat_id"]),
-                         f"♻️ Восстановил pending queue из snapshot: {restored_pending} задач.")
+                         f"♻️ Restored pending queue from snapshot: {restored_pending} tasks.")
 
 append_jsonl(DRIVE_ROOT / "logs" / "supervisor.jsonl", {
     "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -298,8 +298,8 @@ def _chat_watchdog_loop():
                 if st.get("owner_chat_id"):
                     send_with_budget(
                         int(st["owner_chat_id"]),
-                        f"⚠️ Задача зависла ({int(total_sec)}с без прогресса). "
-                        f"Перезапускаю агента.",
+                        f"⚠️ Task stuck ({int(total_sec)}s without progress). "
+                        f"Restarting agent.",
                     )
                 reset_chat_agent()
                 soft_warned = False
@@ -311,8 +311,8 @@ def _chat_watchdog_loop():
                 if st.get("owner_chat_id"):
                     send_with_budget(
                         int(st["owner_chat_id"]),
-                        f"⏱️ Задача работает {int(total_sec)}с, "
-                        f"последний прогресс {int(idle_sec)}с назад. Продолжаю.",
+                        f"⏱️ Task running for {int(total_sec)}s, "
+                        f"last progress {int(idle_sec)}s ago. Continuing.",
                     )
         except Exception:
             log.debug("Failed to check/notify chat watchdog", exc_info=True)
@@ -583,7 +583,7 @@ while True:
             if image_data:
                 if text:
                     agent.inject_message(text)
-                send_with_budget(chat_id, "📎 Фото получено, но сейчас идёт задача. Отправь ещё раз когда освобожусь.")
+                send_with_budget(chat_id, "📎 Photo received, but a task is in progress. Send again when I'm free.")
             elif text:
                 agent.inject_message(text)
 
@@ -661,7 +661,7 @@ while True:
                 if final_text:
                     agent.inject_message(final_text)
                 if _batched_image:
-                    send_with_budget(chat_id, "📎 Фото получено, но сейчас идёт задача. Отправь ещё раз когда освобожусь.")
+                    send_with_budget(chat_id, "📎 Photo received, but a task is in progress. Send again when I'm free.")
             else:
                 # Dispatch to direct chat handler
                 _consciousness.pause()

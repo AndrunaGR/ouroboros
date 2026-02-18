@@ -1,4 +1,4 @@
-"""Управляющие инструменты: restart, promote, schedule, cancel, review, chat_history, update_scratchpad, switch_model."""
+"""Control tools: restart, promote, schedule, cancel, review, chat_history, update_scratchpad, switch_model."""
 
 from __future__ import annotations
 

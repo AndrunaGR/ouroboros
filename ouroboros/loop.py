@@ -425,8 +425,8 @@ def _check_budget_limits(
 
     if budget_pct > 0.5:
         # Hard stop — protect the budget
-        finish_reason = f"Задача потратила ${task_cost:.3f} (>50% от остатка ${budget_remaining_usd:.2f}). Бюджет исчерпан."
-        messages.append({"role": "system", "content": f"[BUDGET LIMIT] {finish_reason} Дай финальный ответ сейчас."})
+        finish_reason = f"Task spent ${task_cost:.3f} (>50% of remaining ${budget_remaining_usd:.2f}). Budget exhausted."
+        messages.append({"role": "system", "content": f"[BUDGET LIMIT] {finish_reason} Give your final response now."})
         try:
             final_msg, final_cost = _call_llm_with_retry(
                 llm, messages, active_model, None, active_effort,
@@ -440,7 +440,7 @@ def _check_budget_limits(
             return finish_reason, accumulated_usage, llm_trace
     elif budget_pct > 0.3 and round_idx % 10 == 0:
         # Soft nudge every 10 rounds when spending is significant
-        messages.append({"role": "system", "content": f"[INFO] Задача потратила ${task_cost:.3f} из ${budget_remaining_usd:.2f}. Если можешь — завершай."})
+        messages.append({"role": "system", "content": f"[INFO] Task spent ${task_cost:.3f} of ${budget_remaining_usd:.2f}. Wrap up if possible."})
 
     return None
 
@@ -711,12 +711,12 @@ def run_llm_loop(
                         break
                 if fallback_model is None:
                     return (
-                        f"⚠️ Не удалось получить ответ от модели {active_model} после {max_retries} попыток. "
-                        f"Все fallback-модели совпадают с активной. Попробуй переформулировать запрос."
+                        f"⚠️ Failed to get a response from model {active_model} after {max_retries} attempts. "
+                        f"All fallback models match the active one. Try rephrasing your request."
                     ), accumulated_usage, llm_trace
 
                 # Emit progress message so user sees fallback happening
-                fallback_progress = f"⚡ Fallback: {active_model} → {fallback_model} после пустого ответа"
+                fallback_progress = f"⚡ Fallback: {active_model} → {fallback_model} after empty response"
                 emit_progress(fallback_progress)
 
                 # Try fallback model (don't increment round_idx — this is still same logical round)
@@ -728,8 +728,8 @@ def run_llm_loop(
                 # If fallback also fails, give up
                 if msg is None:
                     return (
-                        f"⚠️ Не удалось получить ответ от модели после {max_retries} попыток. "
-                        f"Fallback модель ({fallback_model}) также не дала ответа."
+                        f"⚠️ Failed to get a response from the model after {max_retries} attempts. "
+                        f"Fallback model ({fallback_model}) also returned no response."
                     ), accumulated_usage, llm_trace
 
                 # Fallback succeeded — continue processing with this msg
@@ -754,7 +754,7 @@ def run_llm_loop(
             )
 
             # --- Budget guard ---
-            # LLM decides when to stop (Bible П0, П3). We only enforce hard budget limit.
+            # LLM decides when to stop (Bible P0, P3). We only enforce hard budget limit.
             budget_result = _check_budget_limits(
                 budget_remaining_usd, accumulated_usage, round_idx, messages,
                 llm, active_model, active_effort, max_retries, drive_logs,

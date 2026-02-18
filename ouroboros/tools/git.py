@@ -1,4 +1,4 @@
-"""Git инструменты: repo_write_commit, repo_commit_push, git_status, git_diff."""
+"""Git tools: repo_write_commit, repo_commit_push, git_status, git_diff."""
 
 from __future__ import annotations
 

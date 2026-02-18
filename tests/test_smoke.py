@@ -311,7 +311,7 @@ def test_bible_exists_and_has_principles():
     """BIBLE.md exists and contains all 9 principles (0-8)."""
     bible = (REPO / "BIBLE.md").read_text()
     for i in range(9):
-        assert f"Принцип {i}" in bible, f"Principle {i} missing from BIBLE.md"
+        assert f"Principle {i}" in bible, f"Principle {i} missing from BIBLE.md"
 
 
 # ── Code quality invariants ──────────────────────────────────────

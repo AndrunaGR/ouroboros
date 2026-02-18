@@ -1,4 +1,4 @@
-"""Файловые инструменты: repo_read, repo_list, drive_read, drive_list, drive_write, codebase_digest, summarize_dialogue."""
+"""File tools: repo_read, repo_list, drive_read, drive_list, drive_write, codebase_digest, summarize_dialogue."""
 
 from __future__ import annotations
 

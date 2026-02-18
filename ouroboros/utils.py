@@ -1,8 +1,8 @@
 """
-Уроборос — Общие утилиты.
+Ouroboros — Shared utilities.
 
-Единственный источник для вспомогательных функций, используемых во всех модулях.
-Не импортирует ничего из ouroboros.* (нулевой уровень зависимостей).
+Single source for helper functions used across all modules.
+Does not import anything from ouroboros.* (zero dependency level).
 """
 
 from __future__ import annotations

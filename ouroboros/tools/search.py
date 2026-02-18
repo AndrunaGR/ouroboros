@@ -1,4 +1,4 @@
-"""Web search инструмент."""
+"""Web search tool."""
 
 from __future__ import annotations
 

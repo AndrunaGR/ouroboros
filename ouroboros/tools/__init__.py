@@ -1,8 +1,8 @@
 """
-Уроборос — Пакет инструментов (плагинная архитектура).
+Ouroboros — Tool package (plugin architecture).
 
-Реэкспорт: ToolRegistry, ToolContext, ToolEntry.
-Добавить инструмент: создать модуль в этом пакете, экспортировать get_tools().
+Re-exports: ToolRegistry, ToolContext, ToolEntry.
+To add a tool: create a module in this package, export get_tools().
 """
 
 from ouroboros.tools.registry import ToolRegistry, ToolContext, ToolEntry

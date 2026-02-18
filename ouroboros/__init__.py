@@ -1,10 +1,10 @@
 """
-Уроборос — самомодифицирующийся агент.
+Ouroboros — self-modifying AI agent.
 
-Философия: BIBLE.md
-Архитектура: agent.py (оркестратор), tools/ (плагинные инструменты),
-             llm.py (LLM), memory.py (память), review.py (deep review),
-             utils.py (общие утилиты).
+Philosophy: BIBLE.md
+Architecture: agent.py (orchestrator), tools/ (plugin tools),
+              llm.py (LLM client), memory.py (memory), review.py (deep review),
+              utils.py (shared utilities).
 """
 
 # IMPORTANT: Do NOT import agent/loop/llm/etc here!

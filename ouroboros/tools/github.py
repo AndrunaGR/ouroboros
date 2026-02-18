@@ -1,4 +1,4 @@
-"""GitHub инструменты: issues, comments, reactions."""
+"""GitHub tools: issues, comments, reactions."""
 
 from __future__ import annotations
 

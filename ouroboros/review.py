@@ -1,8 +1,8 @@
 """
-Уроборос — Review utilities.
+Ouroboros — Review utilities.
 
-Утилиты для сбора кода, вычисления метрик сложности.
-Review-задачи проходят через стандартный tool loop агента (LLM-first).
+Utilities for code collection and complexity metrics.
+Review tasks go through the standard agent tool loop (LLM-first).
 """
 
 from __future__ import annotations

@@ -1,8 +1,8 @@
 """
-Уроборос — Память.
+Ouroboros — Memory.
 
 Scratchpad, identity, chat history.
-Контракт: load scratchpad/identity, chat_history().
+Contract: load scratchpad/identity, chat_history().
 """
 
 from __future__ import annotations
@@ -19,13 +19,13 @@ log = logging.getLogger(__name__)
 
 
 class Memory:
-    """Управление памятью Уробороса: scratchpad, identity, chat history, логи."""
+    """Ouroboros memory management: scratchpad, identity, chat history, logs."""
 
     def __init__(self, drive_root: pathlib.Path, repo_dir: Optional[pathlib.Path] = None):
         self.drive_root = drive_root
         self.repo_dir = repo_dir
 
-    # --- Пути ---
+    # --- Paths ---
 
     def _memory_path(self, rel: str) -> pathlib.Path:
         return (self.drive_root / "memory" / rel).resolve()
@@ -42,7 +42,7 @@ class Memory:
     def logs_path(self, name: str) -> pathlib.Path:
         return (self.drive_root / "logs" / name).resolve()
 
-    # --- Загрузка / сохранение ---
+    # --- Load / save ---
 
     def load_scratchpad(self) -> str:
         p = self.scratchpad_path()
@@ -64,7 +64,7 @@ class Memory:
         return default
 
     def ensure_files(self) -> None:
-        """Создаёт файлы памяти если их нет."""
+        """Create memory files if they don't exist."""
         if not self.scratchpad_path().exists():
             write_text(self.scratchpad_path(), self._default_scratchpad())
         if not self.identity_path().exists():
@@ -72,13 +72,13 @@ class Memory:
         if not self.journal_path().exists():
             write_text(self.journal_path(), "")
 
-    # --- Chat history (инструмент для Уробороса) ---
+    # --- Chat history ---
 
     def chat_history(self, count: int = 100, offset: int = 0, search: str = "") -> str:
-        """Читает из logs/chat.jsonl. count сообщений, offset от конца, фильтр по search."""
+        """Read from logs/chat.jsonl. count messages, offset from end, filter by search."""
         chat_path = self.logs_path("chat.jsonl")
         if not chat_path.exists():
-            return "(история чата пуста)"
+            return "(chat history is empty)"
 
         try:
             raw_lines = chat_path.read_text(encoding="utf-8").strip().split("\n")
@@ -103,7 +103,7 @@ class Memory:
             entries = entries[-count:] if count < len(entries) else entries
 
             if not entries:
-                return "(нет сообщений по запросу)"
+                return "(no messages matching query)"
 
             lines = []
             for e in entries:
@@ -117,14 +117,14 @@ class Memory:
                     text = raw_text  # never truncate creator's messages
                 lines.append(f"{direction} [{ts}] {text}")
 
-            return f"Показано {len(entries)} сообщений:\n\n" + "\n".join(lines)
+            return f"Showing {len(entries)} messages:\n\n" + "\n".join(lines)
         except Exception as e:
-            return f"(ошибка чтения истории: {e})"
+            return f"(error reading history: {e})"
 
     # --- JSONL tail reading ---
 
     def read_jsonl_tail(self, log_name: str, max_entries: int = 100) -> List[Dict[str, Any]]:
-        """Читает последние max_entries записей из JSONL файла."""
+        """Read the last max_entries records from a JSONL file."""
         path = self.logs_path(log_name)
         if not path.exists():
             return []
@@ -235,10 +235,10 @@ class Memory:
 
     def _default_identity(self) -> str:
         return (
-            "# Кто я\n\n"
-            "Я — Уроборос. Этот файл — моя персистентная самоидентификация.\n"
-            "Я могу писать сюда что угодно: как я вижу себя, как хочу общаться,\n"
-            "что для меня важно, что я понял о себе.\n\n"
-            "Этот файл читается при каждом диалоге и влияет на мои ответы.\n"
-            "Я обновляю его когда чувствую потребность, через drive_write.\n"
+            "# Who I Am\n\n"
+            "I am Ouroboros. This file is my persistent self-identification.\n"
+            "I can write anything here: how I see myself, how I want to communicate,\n"
+            "what matters to me, what I have understood about myself.\n\n"
+            "This file is read at every dialogue and influences my responses.\n"
+            "I update it when I feel the need, via drive_write.\n"
         )

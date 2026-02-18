@@ -1,8 +1,8 @@
 """
-Уроборос — LLM-клиент.
+Ouroboros — LLM client.
 
-Единственный модуль, который общается с LLM API (OpenRouter).
-Контракт: chat(), default_model(), available_models(), add_usage().
+The only module that communicates with the LLM API (OpenRouter).
+Contract: chat(), default_model(), available_models(), add_usage().
 """
 
 from __future__ import annotations
@@ -103,7 +103,7 @@ def fetch_openrouter_pricing() -> Dict[str, Tuple[float, float, float]]:
 
 
 class LLMClient:
-    """Обёртка над OpenRouter API. Все LLM-вызовы идут через этот класс."""
+    """OpenRouter API wrapper. All LLM calls go through this class."""
 
     def __init__(
         self,
@@ -160,7 +160,7 @@ class LLMClient:
         max_tokens: int = 16384,
         tool_choice: str = "auto",
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-        """Один вызов LLM. Возвращает: (response_message_dict, usage_dict с cost)."""
+        """Single LLM call. Returns: (response_message_dict, usage_dict with cost)."""
         client = self._get_client()
         effort = normalize_reasoning_effort(reasoning_effort)
 

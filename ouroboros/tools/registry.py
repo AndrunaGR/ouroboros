@@ -1,8 +1,8 @@
 """
-Уроборос — Реестр инструментов (SSOT).
+Ouroboros — Tool registry (SSOT).
 
-Плагинная архитектура: каждый модуль в tools/ экспортирует get_tools().
-ToolRegistry собирает все инструменты, предоставляет schemas() и execute().
+Plugin architecture: each module in tools/ exports get_tools().
+ToolRegistry collects all tools, provides schemas() and execute().
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ class BrowserState:
 
 @dataclass
 class ToolContext:
-    """Контекст выполнения инструмента — передаётся из агента перед каждой задачей."""
+    """Tool execution context — passed from the agent before each task."""
 
     repo_dir: pathlib.Path
     drive_root: pathlib.Path
@@ -67,7 +67,7 @@ class ToolContext:
 
 @dataclass
 class ToolEntry:
-    """Описание одного инструмента: имя, schema, handler, метаданные."""
+    """Single tool descriptor: name, schema, handler, metadata."""
 
     name: str
     schema: Dict[str, Any]
@@ -92,10 +92,10 @@ CORE_TOOL_NAMES = {
 
 
 class ToolRegistry:
-    """Реестр инструментов Уробороса (SSOT).
+    """Ouroboros tool registry (SSOT).
 
-    Добавить инструмент: создать модуль в ouroboros/tools/,
-    экспортировать get_tools() -> List[ToolEntry].
+    To add a tool: create a module in ouroboros/tools/,
+    export get_tools() -> List[ToolEntry].
     """
 
     def __init__(self, repo_dir: pathlib.Path, drive_root: pathlib.Path):
@@ -125,10 +125,10 @@ class ToolRegistry:
         self._ctx = ctx
 
     def register(self, entry: ToolEntry) -> None:
-        """Зарегистрировать новый инструмент (для расширения Уроборосом)."""
+        """Register a new tool (for extension by Ouroboros)."""
         self._entries[entry.name] = entry
 
-    # --- Контракт ---
+    # --- Contract ---
 
     def available_tools(self) -> List[str]:
         return [e.name for e in self._entries.values()]

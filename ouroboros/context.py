@@ -32,7 +32,7 @@ def _build_user_content(task: Dict[str, Any]) -> Any:
     if not image_b64:
         # Return fallback text if both text and image are empty
         if not text:
-            return "(пустое сообщение)"
+            return "(empty message)"
         return text
 
     # Multipart content with text + image

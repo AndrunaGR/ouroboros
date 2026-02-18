@@ -166,7 +166,7 @@ def handle_chat_direct(chat_id: int, text: str, image_data: Optional[Union[Tuple
             get_event_q().put(e)
     except Exception as e:
         import traceback
-        err_msg = f"⚠️ Ошибка: {type(e).__name__}: {e}"
+        err_msg = f"⚠️ Error: {type(e).__name__}: {e}"
         append_jsonl(
             DRIVE_ROOT / "logs" / "supervisor.jsonl",
             {
@@ -251,7 +251,7 @@ def auto_resume_after_restart() -> None:
             threading.Thread(
                 target=handle_chat_direct,
                 args=(int(chat_id),
-                      "[auto-resume after restart] Продолжай работу. Прочитай scratchpad и identity — там контекст того, что ты делал.",
+                      "[auto-resume after restart] Continue your work. Read scratchpad and identity — they contain context of what you were doing.",
                       None),
                 daemon=True,
             ).start()
@@ -578,8 +578,8 @@ def ensure_workers_healthy() -> None:
         if st.get("owner_chat_id"):
             send_with_budget(
                 int(st["owner_chat_id"]),
-                "⚠️ Частые падения воркеров. Multiprocessing-воркеры отключены, "
-                "продолжаю работать в direct-chat режиме (threading).",
+                "⚠️ Frequent worker crashes. Multiprocessing workers disabled, "
+                "continuing in direct-chat mode (threading).",
             )
         # Kill all workers — direct chat via handle_chat_direct still works
         kill_workers()

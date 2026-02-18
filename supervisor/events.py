@@ -185,7 +185,7 @@ def _handle_restart_request(evt: Dict[str, Any], ctx: Any) -> None:
     )
     if not ok:
         if st.get("owner_chat_id"):
-            ctx.send_with_budget(int(st["owner_chat_id"]), f"⚠️ Restart пропущен: {msg}")
+            ctx.send_with_budget(int(st["owner_chat_id"]), f"⚠️ Restart skipped: {msg}")
         return
     ctx.kill_workers()
     # Persist tg_offset/session_id before execv to avoid duplicate Telegram updates.
@@ -215,14 +215,14 @@ def _handle_promote_to_stable(evt: Dict[str, Any], ctx: Any) -> None:
         if st.get("owner_chat_id"):
             ctx.send_with_budget(
                 int(st["owner_chat_id"]),
-                f"✅ Промоут: {ctx.BRANCH_DEV} → {ctx.BRANCH_STABLE} ({new_sha[:8]})",
+                f"✅ Promoted: {ctx.BRANCH_DEV} → {ctx.BRANCH_STABLE} ({new_sha[:8]})",
             )
     except Exception as e:
         st = ctx.load_state()
         if st.get("owner_chat_id"):
             ctx.send_with_budget(
                 int(st["owner_chat_id"]),
-                f"❌ Ошибка промоута в stable: {e}",
+                f"❌ Failed to promote to stable: {e}",
             )
 
 
@@ -314,7 +314,7 @@ def _handle_schedule_task(evt: Dict[str, Any], ctx: Any) -> None:
         if parent_id:
             task["parent_task_id"] = parent_id
         ctx.enqueue_task(task)
-        ctx.send_with_budget(int(owner_chat_id), f"🗓️ Запланировал задачу {tid}: {desc}")
+        ctx.send_with_budget(int(owner_chat_id), f"🗓️ Scheduled task {tid}: {desc}")
         ctx.persist_queue_snapshot(reason="schedule_task_event")
 
 
