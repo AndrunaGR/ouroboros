@@ -110,8 +110,13 @@ class LLMClient:
         api_key: Optional[str] = None,
         base_url: str = "https://openrouter.ai/api/v1",
     ):
-        self._api_key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
-        self._base_url = base_url
+        if os.getenv("USE_LOCAL_MODEL") == "1":
+            self._api_key = "EMPTY"
+            self._base_url = "http://127.0.0.1:8000/v1"
+            log.info("✅ Используется локальная Qwen3.5-35B-A3B (unsloth GGUF)")
+        else:
+            self._api_key = api_key or os.environ.get("OPENROUTER_API_KEY", "")
+            self._base_url = base_url
         self._client = None
 
     def _get_client(self):
