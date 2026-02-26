@@ -20,7 +20,44 @@ def install_launcher_deps() -> None:
     )
 
 install_launcher_deps()
+# ============================
+# LOCAL MODEL BLOCK — чисто unsloth Qwen3.5-35B-A3B
+# ============================
+USE_LOCAL = os.getenv("USE_LOCAL_MODEL") == "1"
 
+if USE_LOCAL:
+    print("🚀 Устанавливаю llama-cpp-python + huggingface_hub для локальной модели...")
+    subprocess.run([
+        sys.executable, "-m", "pip", "install", "-q",
+        "huggingface_hub", "llama-cpp-python[server]"
+    ], check=True)
+
+    from ouroboros.local_model import get_local_manager
+    manager = get_local_manager()
+
+    # === НАСТРОЙКИ МОДЕЛИ ===
+    os.environ["LOCAL_MODEL_REPO"] = "unsloth/Qwen3.5-35B-A3B-GGUF"
+    os.environ["LOCAL_MODEL_FILE"] = "Qwen3.5-35B-A3B-Q4_K_M.gguf"   # можешь поменять на UD-Q4_K_XL.gguf
+    os.environ["N_GPU_LAYERS"] = "40"          # 35-45 — подбирай (меньше = стабильнее)
+    os.environ["LOCAL_CTX"] = "8192"
+
+    repo = os.environ["LOCAL_MODEL_REPO"]
+    file = os.environ["LOCAL_MODEL_FILE"]
+    model_path = manager.download_model(repo, file)
+
+    manager.start_server(model_path)
+
+    # Отключаем все внешние API
+    os.environ["OPENROUTER_API_KEY"] = ""
+    os.environ["OPENAI_API_KEY"] = ""
+    os.environ["ANTHROPIC_API_KEY"] = ""
+    os.environ["OUROBOROS_MODEL"] = "qwen3.5-35b-a3b-local"
+    os.environ["OUROBOROS_MODEL_CODE"] = "qwen3.5-35b-a3b-local"
+    os.environ["OUROBOROS_MODEL_LIGHT"] = "qwen3.5-35b-a3b-local"
+    print("✅ Всё работает ТОЛЬКО локально!")
+else:
+    # оригинальный код дальше...
+    pass  # остальной код launcher остаётся без изменений
 def ensure_claude_code_cli() -> bool:
     """Best-effort install of Claude Code CLI for Anthropic-powered code edits."""
     local_bin = str(pathlib.Path.home() / ".local" / "bin")
